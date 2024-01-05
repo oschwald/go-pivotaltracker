@@ -69,6 +69,7 @@ type Project struct {
 	VelocityAveragedOver         int            `json:"velocity_averaged_over"`
 	ShownIterationsStartTime     *time.Time     `json:"shown_iterations_start_time"`
 	StartTime                    *time.Time     `json:"start_time"`
+	Status                       string         `json:"status"`
 	NumberOfDoneIterationsToShow int            `json:"number_of_done_iterations_to_show"`
 	HasGoogleDomain              bool           `json:"has_google_domain"`
 	Description                  string         `json:"description"`
@@ -106,7 +107,7 @@ func newProjectService(client *Client) *ProjectService {
 
 // List returns all active projects for the current user.
 func (service *ProjectService) List() ([]*Project, *http.Response, error) {
-	req, err := service.client.NewRequest("GET", "projects", nil)
+	req, err := service.client.NewRequest("GET", "projects?fields=:default,status", nil)
 	if err != nil {
 		return nil, nil, err
 	}
