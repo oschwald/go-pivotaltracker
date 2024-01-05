@@ -269,7 +269,7 @@ func fieldsToQuery(fields []string) string {
 	return strings.Join(fields, ",")
 }
 
-// ListOnlyFields returns all the fields of the stories matching the filter given.
+// ListWithFields returns all the fields of the stories matching the filter given.
 // Example: fields = []string{"id", "name", "description"}
 // Having nil or empty fields will return all the fields.
 func (service *StoryService) ListWithFields(projectID int, filter string, fields []string) ([]*Story, error) {
