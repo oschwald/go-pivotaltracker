@@ -218,12 +218,24 @@ func (service *StoryService) List(projectID int, filter string) ([]*Story, error
 func newStoriesRequestFunc(client *Client, projectID int, filter string, fields []string) func() *http.Request {
 	return func() *http.Request {
 		u := fmt.Sprintf("projects/%v/stories", projectID)
+
+		var queryString string
+
 		if filter != "" {
-			u += "?filter=" + url.QueryEscape(filter)
-			if len(fields) != 0 {
-				u += "&fields=" + url.QueryEscape(fieldsToQuery(fields))
-			}
+			queryString = "?filter=" + url.QueryEscape(filter)
 		}
+
+		if len(fields) != 0 {
+			if queryString == "" {
+				queryString += "?"
+			} else {
+				queryString += "&"
+			}
+			queryString += "fields=" + url.QueryEscape(fieldsToQuery(fields))
+		}
+
+		u += queryString
+
 		req, _ := client.NewRequest("GET", u, nil)
 		return req
 	}
@@ -257,7 +269,7 @@ func fieldsToQuery(fields []string) string {
 	return strings.Join(fields, ",")
 }
 
-// ListOnlyFields returns all the fields of the stories matching the filter given.
+// ListWithFields returns all the fields of the stories matching the filter given.
 // Example: fields = []string{"id", "name", "description"}
 // Having nil or empty fields will return all the fields.
 func (service *StoryService) ListWithFields(projectID int, filter string, fields []string) ([]*Story, error) {
