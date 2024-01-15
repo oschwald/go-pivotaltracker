@@ -307,7 +307,22 @@ func (c *StoryCursor) Next() (s *Story, err error) {
 // Iterate returns a cursor that can be used to iterate over the stories specified
 // by the filter. More stories are fetched on demand as needed.
 func (service *StoryService) Iterate(projectID int, filter string) (c *StoryCursor, err error) {
-	reqFunc := newStoriesRequestFunc(service.client, projectID, filter, nil)
+	return service.IterateWithFields(projectID, filter, nil)
+}
+
+// IterateWithFields returns a cursor that can be used to iterate over the
+// stories specified by the filter. More stories are fetched on demand as
+// needed.
+//
+// Similar to ListWithFields(), only the requested fields will be returned for
+// each story. If fields is empty/nil, the fields returned by default are
+// returned.
+func (service *StoryService) IterateWithFields(
+	projectID int,
+	filter string,
+	fields []string,
+) (c *StoryCursor, err error) {
+	reqFunc := newStoriesRequestFunc(service.client, projectID, filter, fields)
 	cursor, err := newCursor(service.client, reqFunc, PageLimit)
 	if err != nil {
 		return nil, err
