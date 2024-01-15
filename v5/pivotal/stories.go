@@ -193,7 +193,7 @@ func newStoryService(client *Client) *StoryService {
 	return &StoryService{client}
 }
 
-// List returns all stories matching the filter in case the filter is specified.
+// List returns the stories matching the filter given, if any.
 func (service *StoryService) List(projectID int, filter string) ([]*Story, error) {
 	reqFunc := newStoriesRequestFunc(service.client, projectID, filter, nil)
 	cursor, err := newCursor(service.client, reqFunc, 0)
@@ -262,11 +262,13 @@ func fieldsToQuery(fields []string) string {
 	return strings.Join(fields, ",")
 }
 
-// ListWithFields returns all the fields of the stories matching the filter given.
+// ListWithFields returns the requested fields of the stories matching the
+// filter given, if any
 //
 // Example: fields = []string{"id", "name", "description"}
 //
-// Having nil or empty fields will return all the fields.
+// Having nil or empty fields will return all the fields that are returned by
+// default.
 func (service *StoryService) ListWithFields(projectID int, filter string, fields []string) ([]*Story, error) {
 	reqFunc := newStoriesRequestFunc(service.client, projectID, filter, fields)
 	cursor, err := newCursor(service.client, reqFunc, 0)
