@@ -195,17 +195,7 @@ func newStoryService(client *Client) *StoryService {
 
 // List returns the stories matching the filter given, if any.
 func (service *StoryService) List(projectID int, filter string) ([]*Story, error) {
-	reqFunc := newStoriesRequestFunc(service.client, projectID, filter, nil)
-	cursor, err := newCursor(service.client, reqFunc, 0)
-	if err != nil {
-		return nil, err
-	}
-
-	var stories []*Story
-	if err := cursor.all(&stories); err != nil {
-		return nil, err
-	}
-	return stories, nil
+	return service.ListWithFields(projectID, filter, nil)
 }
 
 func newStoriesRequestFunc(client *Client, projectID int, filter string, fields []string) func() *http.Request {
