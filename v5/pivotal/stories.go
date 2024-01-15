@@ -194,6 +194,9 @@ func newStoryService(client *Client) *StoryService {
 }
 
 // List returns the stories matching the filter given, if any.
+//
+// Note this method only returns a single page of stories. If you want to
+// return multiple pages, see Iterate().
 func (service *StoryService) List(projectID int, filter string) ([]*Story, error) {
 	return service.ListWithFields(projectID, filter, nil)
 }
@@ -259,6 +262,9 @@ func fieldsToQuery(fields []string) string {
 //
 // Having nil or empty fields will return all the fields that are returned by
 // default.
+//
+// Note this method only returns a single page of stories. If you want to
+// return multiple pages, see Iterate().
 func (service *StoryService) ListWithFields(projectID int, filter string, fields []string) ([]*Story, error) {
 	reqFunc := newStoriesRequestFunc(service.client, projectID, filter, fields)
 	cursor, err := newCursor(service.client, reqFunc, 0)
